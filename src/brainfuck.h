@@ -3,7 +3,7 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 20:07:03
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-15 20:07:28
+// ModifyDate:   2020-09-15 20:43:08
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifndef __BRAINFUCK_H__
@@ -22,7 +22,7 @@ namespace bf
 {
 
 
-constexpr size_t SLEEP_TIME = 500 * 1000;
+constexpr size_t SLEEP_TIME = 30 * 1000;
 
 constexpr char BF_PLUS      = '+';
 constexpr char BF_MINUS     = '-';
