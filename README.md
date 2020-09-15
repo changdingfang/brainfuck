@@ -36,4 +36,4 @@ g++ src/*.cpp -std=c++11 -o bf
 
 效果
 
-![brainfuck](https://github.com/changdingfang/brainfuck/blob/master/imgs/brainfuck.gif)
+![brainfuck](./imgs/brainfuck.gif)
