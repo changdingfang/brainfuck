@@ -3,14 +3,14 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 20:07:46
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-15 20:14:24
+// ModifyDate:   2020-09-16 19:33:06
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #include "brainfuck.h"
 
+#include <unistd.h>
 
 using namespace std;
-
 
 namespace bf
 {
@@ -99,7 +99,7 @@ namespace bf
 
         // this->removeInvalidChar_(srcIst, ist);
 
-        for (string::size_type i = 0; i < ist.size(); ++i)
+        for (string::size_type currIdx = 0, i = 0; i < ist.size(); ++i, currIdx = i)
         {
             switch(ist[i])
             {
@@ -109,24 +109,12 @@ namespace bf
                 case BF_NEXT:       this->next_(w);             break;
                 case BF_OUTPUT: w.output(paperTape_[ptIndex_]); break;
                 case BF_INPUT:  paperTape_[ptIndex_] = getchar(); break;
-                case BF_LOOP_START: loop_.push(i);               break;
-                case BF_LOOP_STOP: 
-                    {
-                        string::size_type top = this->loopStop_(w);
-                        if (top != 0)
-                        {
-                            w.show(paperTape_, ptIndex_, i);
-                            usleep(SLEEP_TIME);
-                            i = top;
-                            continue;
-                        }
-                        break;
-                    }
-                default:
-                    continue;
+                case BF_LOOP_START: i = this->loopStart_(ist, i); break;
+                case BF_LOOP_STOP: i = this->loopStop_(i);   break;
+                default: continue;
             }
-            w.show(paperTape_, ptIndex_, i);
-            usleep(SLEEP_TIME);
+            w.show(paperTape_, ptIndex_, currIdx);
+            usleep(sleepTime_);
         }
     }
 

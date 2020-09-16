@@ -3,7 +3,7 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 19:22:08
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-15 20:09:33
+// ModifyDate:   2020-09-16 20:37:00
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifndef __SHOW_H__
@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-constexpr int LinesMax = 12;
+constexpr int LinesMax = 8;
 
 using namespace std;
 
@@ -51,9 +51,13 @@ public:
 
     void show(vector<unsigned char> v, size_t ptrIndex, string::size_type codeIndex)
     {
-        system("clear");
+        ++istCount_;
+        /* 清屏 */
+        printf("\x1b[H\x1b[2J");
+
         this->showPaperTape(v, ptrIndex);
         this->showOutput();
+        printf("ist count:(%d)\n", istCount_);
         this->showcode(codeIndex);
     }
 
@@ -83,11 +87,10 @@ public:
         }
     }
 
-
 private:
     void showOutput()
     {
-        printf("output: %s\n", output_.c_str());
+        printf("output: \033[1;37;45m%s\033[0m\n", output_.c_str());
     }
 
 
@@ -161,6 +164,7 @@ private:
     string bottom_;
     string output_;
     vector<string> bfCode_;
+    int    istCount_{0};
 };
 
 
