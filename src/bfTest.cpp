@@ -3,11 +3,12 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 20:09:13
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-16 19:28:02
+// ModifyDate:   2020-09-17 21:33:35
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #include "brainfuck.h"
 #include "cmdline.h"
+#include "format.h"
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -38,6 +39,17 @@ void parseFile(const string &filename, string &ist)
 }
 
 
+void writeFile(const string &filename, const string &data)
+{
+    std::FILE *pFd = ::fopen(filename.c_str(), "w+");
+    if (pFd == nullptr)
+    {
+        throw(string("open bf file error"));
+    }
+    std::fwrite(const_cast<char *>(data.data()), 1, data.size(), pFd);
+}
+
+
 int main(int argc, char **argv)
 {
     CmdLine cl;
@@ -46,13 +58,33 @@ int main(int argc, char **argv)
     {
         cl.parseCmdLine(argc, argv);
         // cl.print();
-        parseFile(cl.get("bffile"), ist);
+        string filename = cl.get("format", "");
+        if (!filename.empty())
+        {
+            parseFile(filename, ist);
+            string formatIst;
+            bf::Format fm;
+            fm.format(ist, formatIst);
+            string newFile = cl.get("output", "");
+            if (newFile.empty())
+            {
+                newFile = filename.substr(0, filename.find_last_of('.')) + "_new.b";
+            }
+            writeFile(newFile, formatIst);
+            printf("format success, new file: %s\n", newFile.c_str());
+
+            return 0;
+        }
+
+        filename = cl.get("bffile");
+        parseFile(filename, ist);
     }
     catch (const string e)
     {
         perror(e.c_str());
         exit(-1);
     }
+
 
     struct timeval t1;
     gettimeofday(&t1, nullptr);
