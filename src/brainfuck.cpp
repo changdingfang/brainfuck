@@ -3,12 +3,10 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 20:07:46
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-16 19:33:06
+// ModifyDate:   2020-09-17 22:36:20
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #include "brainfuck.h"
-
-#include <unistd.h>
 
 using namespace std;
 
@@ -16,9 +14,10 @@ namespace bf
 {
 
 
-    BF::BF()
+    BF::BF(Window *pW)
         : paperTape_()
           , ptIndex_(0)
+          , pW_(pW)
     {
         paperTape_.resize(1024, 0);
     }
@@ -95,7 +94,6 @@ namespace bf
         }
 
         string ist(srcIst);
-        Window w(srcIst);
 
         // this->removeInvalidChar_(srcIst, ist);
 
@@ -105,16 +103,19 @@ namespace bf
             {
                 case BF_PLUS:       ++paperTape_[ptIndex_];     break;
                 case BF_MINUS:      --paperTape_[ptIndex_];     break;
-                case BF_PREVIOUS:   this->previous_(w);         break;
-                case BF_NEXT:       this->next_(w);             break;
-                case BF_OUTPUT: w.output(paperTape_[ptIndex_]); break;
+                case BF_PREVIOUS:   this->previous_();          break;
+                case BF_NEXT:       this->next_();              break;
+                case BF_OUTPUT:     this->output();             break;
                 case BF_INPUT:  paperTape_[ptIndex_] = getchar(); break;
                 case BF_LOOP_START: i = this->loopStart_(ist, i); break;
                 case BF_LOOP_STOP: i = this->loopStop_(i);   break;
                 default: continue;
             }
-            w.show(paperTape_, ptIndex_, currIdx);
-            usleep(sleepTime_);
+
+            if (pW_ != nullptr)
+            {
+                pW_->show(paperTape_, ptIndex_, currIdx);
+            }
         }
     }
 

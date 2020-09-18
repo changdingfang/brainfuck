@@ -3,7 +3,7 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 20:07:03
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-16 19:33:12
+// ModifyDate:   2020-09-17 22:54:28
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifndef __BRAINFUCK_H__
@@ -20,8 +20,6 @@ namespace bf
 {
 
 
-    constexpr size_t SLEEP_TIME = 30 * 1000;
-
     constexpr char BF_PLUS      = '+';
     constexpr char BF_MINUS     = '-';
     constexpr char BF_PREVIOUS  = '<';
@@ -35,38 +33,51 @@ namespace bf
     class BF
     {
     public:
-        BF();
+        BF(Window *pW = nullptr);
         void parseInstructions(const std::string &srcIst);
-
-
-        inline void setSleepTime(time_t t)
-        {
-            sleepTime_ = t * 1000;
-        }
 
     private:
         bool grammarCheck(const std::string &ist) const;
 
 
-        inline void previous_(Window &w)
+        inline void previous_()
         {
             if (ptIndex_ == 0)
             {
                 throw("Memory out of bounds");
             }
             --ptIndex_;
-            w.windowsShiftRight(ptIndex_);
+            if (pW_ != nullptr)
+            {
+                pW_->windowsShiftRight(ptIndex_);
+            }
         }
 
 
-        inline void next_(Window &w)
+        inline void next_()
         {
             if (ptIndex_ >= paperTape_.size())
             {
                 paperTape_.resize(2 * paperTape_.size(), 0);
             }
             ++ptIndex_;
-            w.windowsShiftLeft(ptIndex_);
+            if (pW_ != nullptr)
+            {
+                pW_->windowsShiftLeft(ptIndex_);
+            }
+        }
+
+
+        inline void output()
+        {
+            if (pW_ != nullptr)
+            {
+                pW_->output(paperTape_[ptIndex_]);
+            }
+            else
+            {
+                putchar(paperTape_[ptIndex_]);
+            }
         }
 
 
@@ -118,7 +129,7 @@ namespace bf
         std::vector<unsigned char> paperTape_;
         size_t ptIndex_;
         stack<string::size_type> loop_;
-        time_t sleepTime_ = {SLEEP_TIME};
+        Window *pW_ = nullptr;
     };
 
 

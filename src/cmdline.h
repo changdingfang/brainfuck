@@ -3,7 +3,7 @@
 // Author:       dingfang
 // CreateDate:   2020-09-16 19:26:54
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-16 21:05:21
+// ModifyDate:   2020-09-17 22:51:05
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifndef __CMDLINE_H__
@@ -65,6 +65,14 @@ public:
                 {
                     paramMap_[sleepTime_] = argv[i + 1];
                 }
+                else if (*p == 's' && *(p + 1) == '\0' || !strcmp(p, "show"))
+                {
+                    paramMap_[show_] = "true";
+                    if (!strcmp(argv[i + 1], "false"))
+                    {
+                        paramMap_[show_] = argv[i + 1];
+                    }
+                }
                 ++i;
             }
             else
@@ -105,6 +113,7 @@ private:
     const std::string format_ {"format"};
     const std::string output_ {"output"};
     const std::string sleepTime_ {"sleepTime"};
+    const std::string show_ {"show"};
 };
 
 

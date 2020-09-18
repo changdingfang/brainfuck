@@ -3,7 +3,7 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 20:09:13
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-17 21:33:35
+// ModifyDate:   2020-09-17 22:45:31
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #include "brainfuck.h"
@@ -89,9 +89,18 @@ int main(int argc, char **argv)
     struct timeval t1;
     gettimeofday(&t1, nullptr);
 
-    bf::BF bf;
-    bf.setSleepTime(std::stoul(cl.get("sleepTime", "15")));
-    bf.parseInstructions(ist);
+    if (cl.get("show", "true") == "true")
+    {
+        Window w(ist);
+        w.setSleepTime(std::stoul(cl.get("sleepTime", "15")));
+        bf::BF bf(&w);
+        bf.parseInstructions(ist);
+    }
+    else
+    {
+        bf::BF bf;
+        bf.parseInstructions(ist);
+    }
 
     struct timeval t2;
     gettimeofday(&t2, nullptr);

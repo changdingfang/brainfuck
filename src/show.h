@@ -3,7 +3,7 @@
 // Author:       dingfang
 // CreateDate:   2020-09-15 19:22:08
 // ModifyAuthor: dingfang
-// ModifyDate:   2020-09-16 20:37:00
+// ModifyDate:   2020-09-17 22:59:19
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 #ifndef __SHOW_H__
@@ -11,6 +11,7 @@
 
 
 #include <stdio.h>
+#include <unistd.h>
 
 #include <string>
 #include <vector>
@@ -18,6 +19,7 @@
 constexpr int LinesMax = 8;
 
 using namespace std;
+
 
 class Window
 {
@@ -53,12 +55,14 @@ public:
     {
         ++istCount_;
         /* 清屏 */
-        printf("\x1b[H\x1b[2J");
+        // printf("\x1b[H\x1b[2J");
+        printf("\033[H\033[2J");
 
         this->showPaperTape(v, ptrIndex);
         this->showOutput();
         printf("ist count:(%d)\n", istCount_);
         this->showcode(codeIndex);
+        usleep(sleepTime_);
     }
 
 
@@ -85,6 +89,12 @@ public:
             ++start_;
             ++end_;
         }
+    }
+
+
+    inline void setSleepTime(time_t t)
+    {
+        sleepTime_ = t * 1000;
     }
 
 private:
@@ -165,6 +175,7 @@ private:
     string output_;
     vector<string> bfCode_;
     int    istCount_{0};
+    time_t sleepTime_ = { 30 * 1000 };
 };
 
 
